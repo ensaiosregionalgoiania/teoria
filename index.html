@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hinos CCB - Teoria Musical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Menu Lateral Compacto */
+        .sidebar {
+            width: 200px;
+            background: linear-gradient(to bottom, #2c3e50, #3498db);
+            color: white;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .config-group {
+            margin-bottom: 15px;
+        }
+        
+        .config-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .config-group select, .config-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .config-group input {
+            margin-bottom: 8px;
+        }
+        
+        .confirm-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .confirm-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .question {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option-btn {
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .option-btn:hover {
+            background-color: #d6eaf8;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .next-btn {
+            padding: 12px;
+            font-size: 1.1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .next-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .stats {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #e8f4f8;
+            border-radius: 6px;
+            font-size: 1.1em;
+            border: 1px solid #d1e7f0;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+        
+        .property-name {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .help-icon {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 0.9em;
+            background: #e1f0fa;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .help-icon:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        /* Modal de ajuda */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            line-height: 1.6;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .modal-title {
+            font-size: 1.3em;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .modal-body {
+            margin-bottom: 15px;
+        }
+        
+        .modal-body h3 {
+            color: #3498db;
+            margin-top: 15px;
+        }
+        
+        .modal-body p {
+            margin-bottom: 10px;
+        }
+        
+        .modal-body ul {
+            padding-left: 20px;
+        }
+        
+        .modal-body li {
+            margin-bottom: 5px;
+        }
+        
+        .modal-footer {
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .modal-ok-btn {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .modal-ok-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Menu responsivo para mobile */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                left: -200px;
+                height: 100%;
+                z-index: 1000;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 60px 15px 15px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão para abrir/fechar menu em mobile -->
+    <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+    
+    <!-- Menu Lateral -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Hinos CCB</h2>
+            <p>Teoria Musical</p>
+        </div>
+        
+        <div class="config-group">
+            <label for="hinario">Hinário:</label>
+            <select id="hinario">
+                <option value="DÓ">Dó</option>
+                <option value="SI BEMOL">Si Bemol</option>
+                <option value="MI BEMOL">Mi Bemol</option>
+            </select>
+        </div>
+        
+        <div class="config-group">
+            <label for="modo">Modo de Estudo:</label>
+            <select id="modo">
+                <option value="aleatorio">Aleatório</option>
+                <option value="sequencial">Sequencial</option>
+            </select>
+        </div>
+        
+        <div class="config-group" id="hino-inicial-group">
+            <label for="hino-inicial">Hino Inicial (1-480):</label>
+            <input type="number" id="hino-inicial" min="1" max="480" value="1">
+            <button class="confirm-btn" id="confirmar-hino">Confirmar</button>
+        </div>
+        
+        <div class="sidebar-footer">
+            <p>Estude os hinos da CCB</p>
+        </div>
+    </div>
+    
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <h1>Teoria Musical - Hinário CCB</h1>
+            
+            <div id="quiz-container">
+                <div class="question-container">
+                    <div class="question" id="hino-number"></div>
+                    
+                    <div id="property-questions">
+                        <!-- Perguntas serão inseridas aqui -->
+                    </div>
+                    
+                    <button id="next-btn" class="next-btn">Próximo Hino</button>
+                </div>
+                
+                <div class="stats" id="stats">
+                    Perguntas: 0 | Acertos: 0 | Erros: 0
+                </div>
+                
+                <div class="progress-container">
+                    <div>Progresso: <span id="progress">0</span>%</div>
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ajuda -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">Ajuda</span>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Conteúdo será inserido aqui -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-ok-btn" id="modalOk">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos hinos (exemplo com apenas alguns hinos)
+        const hinosDB = [
+            { "Hino": "1", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "2", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "3", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "4", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "5", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "6", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "7", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "8", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "6", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "7", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "8", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "9", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "10", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "11", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "12", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "13", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "14", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "15", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "16", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "17", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "18", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "19", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "20", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "21", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "22", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "23", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "24", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "25", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "26", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "27", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "28", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "29", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "30", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "31", "Tipo de Compasso": "Binário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "32", "Tipo de Compasso": "Binário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "33", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "34", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "35", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "36", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "37", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "38", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "39", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "40", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "41", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "42", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "43", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "44", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "45", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "46", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "47", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "48", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "49", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "50", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "51", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "52", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "53", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "54", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "55", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "56", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "57", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "58", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "59", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "60", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "61", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "62", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "63", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "64", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "65", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "66", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "67", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "68", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "69", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "70", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "71", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "72", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "73", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "74", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "75", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "76", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "77", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "78", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "79", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "80", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "81", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "82", "Tipo de Compasso": "Binário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "83", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "84", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "85", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "86", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "87", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "88", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "89", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "90", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "91", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "92", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "93", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "94", "Tipo de Compasso": "Quaternário Simples e Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve e Minima" },
+            { "Hino": "95", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "96", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "97", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "98", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "99", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "100", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "101", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "102", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "103", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "104", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "105", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "106", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "107", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "108", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "109", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "110", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "111", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "112", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "113", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "114", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "115", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "116", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "117", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "118", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "119", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "120", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "121", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "122", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "123", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "124", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "125", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "126", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "127", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "128", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "129", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "130", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "131", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "132", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "133", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "134", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "135", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "136", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "137", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "138", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "139", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "140", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "141", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "142", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "143", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "144", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "145", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "146", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "147", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "148", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "149", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "150", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "151", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "152", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "153", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "154", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "155", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "156", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "157", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "158", "Tipo de Compasso": "Binário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "159", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "160", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "161", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "162", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "163", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "164", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "165", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "166", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "167", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "168", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "169", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "170", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "171", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "172", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "173", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "174", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "175", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "176", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "177", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "178", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "179", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "180", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "181", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "182", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "183", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "184", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "185", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "186", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "187", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "188", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "189", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "190", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "191", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "192", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "193", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "194", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "195", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "196", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "197", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "198", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "199", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "200", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "201", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "202", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "203", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "204", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "205", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "206", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "207", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "208", "Tipo de Compasso": "Binário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ACÉFALO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "209", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "210", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "211", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "212", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "213", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "214", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "215", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "216", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "217", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "218", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "219", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "220", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "221", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "222", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "223", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "224", "Tipo de Compasso": "Binário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "225", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "226", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "227", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "228", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "229", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "230", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "231", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "232", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "233", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "234", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "235", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "236", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "237", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "238", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "239", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "240", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "241", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "242", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "243", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "244", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "245", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "246", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "247", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "248", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "249", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "250", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "251", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "252", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "253", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "254", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "255", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "256", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "257", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "258", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "259", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "260", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "261", "Tipo de Compasso": "Binário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "262", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "263", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "264", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "265", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "266", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "267", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "268", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "269", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "270", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "271", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "272", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "273", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "274", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "275", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "276", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "277", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "278", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "279", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "280", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "281", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "282", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "283", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "284", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "285", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "286", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "287", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "288", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "289", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "290", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "291", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "292", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "293", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "294", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "295", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "296", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "297", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "298", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "299", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "300", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "301", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "302", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "303", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "304", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "305", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "306", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "307", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "308", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "309", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "310", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "311", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "312", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "313", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "314", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "315", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "316", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "317", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "318", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "319", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "320", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "321", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "322", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "323", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "324", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "325", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "326", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "327", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "328", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "329", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "330", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "331", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "332", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "333", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "334", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "335", "Tipo de Compasso": "Binário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "336", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "337", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "338", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "339", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "340", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "341", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "342", "Tipo de Compasso": "Ternário Composto e Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe e Semibreve Pontuada" },
+            { "Hino": "343", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "344", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "345", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "346", "Tipo de Compasso": "Binário Composto e Ternário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada e Nao Existe" },
+            { "Hino": "347", "Tipo de Compasso": "Binário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "348", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "349", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "350", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "351", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "352", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "353", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "354", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "355", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "356", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "357", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "358", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "359", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "360", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "361", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "362", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "363", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "364", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "365", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "366", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "367", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "368", "Tipo de Compasso": "Quaternário Simples e Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve e Minima Pontuada" },
+            { "Hino": "369", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "370", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "371", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "372", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "373", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "374", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "375", "Tipo de Compasso": "Binário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "376", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "377", "Tipo de Compasso": "Binário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ACÉFALO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "378", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "379", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "380", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "381", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "382", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "383", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "384", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "385", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "386", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "387", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "388", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "389", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "390", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "391", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "392", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "393", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "394", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "395", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "396", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "397", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "398", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "399", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "400", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "401", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "402", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "403", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "404", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "405", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "406", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "407", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "408", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "409", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "410", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "411", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "412", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "413", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "414", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "415", "Tipo de Compasso": "Ternário Composto e Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe e Minima Pontuada" },
+            { "Hino": "416", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "417", "Tipo de Compasso": "Binário Composto", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "418", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "419", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "420", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "421", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "422", "Tipo de Compasso": "Binário Composto e Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia e Nao Existe", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "423", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "424", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "425", "Tipo de Compasso": "Ternário Composto", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada e Seminima", "Unidade de Compasso": "Nao Existe" },
+            { "Hino": "426", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "427", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "428", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "429", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "430", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "431", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "432", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "433", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "434", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "435", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "436", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "437", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "438", "Tipo de Compasso": "Binário Composto", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "439", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "440", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "441", "Tipo de Compasso": "Binário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Minima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "442", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "443", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "444", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "445", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "446", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "447", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "448", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "449", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "450", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "451", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "452", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "453", "Tipo de Compasso": "Binário Composto", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Seminima", "Unidade de Tempo": "Minima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "454", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "455", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "456", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "457", "Tipo de Compasso": "Binário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "458", "Tipo de Compasso": "Binário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "459", "Tipo de Compasso": "Quaternário Composto", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Semibreve Pontuada" },
+            { "Hino": "460", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "461", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "462", "Tipo de Compasso": "Ternário Simples e Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada e Semibreve" },
+            { "Hino": "463", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "464", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "465", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "466", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "467", "Tipo de Compasso": "Binário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "468", "Tipo de Compasso": "Binário Simples", "Tonalidade": "FÁ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "469", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "470", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "RÉ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "471", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "472", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "DÓ MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "473", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "474", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "475", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "476", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "477", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "478", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "MI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "479", "Tipo de Compasso": "Ternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "480", "Tipo de Compasso": "Binário Composto", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Colcheia", "Unidade de Tempo": "Seminima Pontuada", "Unidade de Compasso": "Minima Pontuada" },
+            { "Hino": "C1", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "C2", "Tipo de Compasso": "Binário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Minima" },
+            { "Hino": "C3", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "C4", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "LÁ BEMOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "C5", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SI BEMOL MAIOR", "Ritmo Inicial": "ANACRÚSICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" },
+            { "Hino": "C6", "Tipo de Compasso": "Quaternário Simples", "Tonalidade": "SOL MAIOR", "Ritmo Inicial": "TÉTICO", "Unidade de Movimento": "Nao Existe", "Unidade de Tempo": "Seminima", "Unidade de Compasso": "Semibreve" }
+
+        ];
+
+        // Elementos da página
+        const hinoNumberElement = document.getElementById('hino-number');
+        const propertyQuestionsElement = document.getElementById('property-questions');
+        const nextButton = document.getElementById('next-btn');
+        const statsElement = document.getElementById('stats');
+        const progressElement = document.getElementById('progress');
+        const progressBar = document.getElementById('progress-bar');
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const modoSelect = document.getElementById('modo');
+        const hinoInicialInput = document.getElementById('hino-inicial');
+        const confirmarHinoBtn = document.getElementById('confirmar-hino');
+        const hinoInicialGroup = document.getElementById('hino-inicial-group');
+        
+        // Elementos do modal
+        const modal = document.getElementById('helpModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalOk = document.getElementById('modalOk');
+        const closeBtn = document.querySelector('.close');
+
+        // Variáveis do quiz
+        let currentHino;
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let correctValue = "aaa";
+        let currentHinoIndex = 1; // Inicia no hino 1
+        let modoEstudo = "aleatorio"; // Modo padrão: aleatório
+        const propertiesToQuiz = ["Tipo de Compasso", "Tonalidade", "Ritmo Inicial", "Unidade de Movimento", "Unidade de Tempo", "Unidade de Compasso"];
+
+        // Conteúdo de ajuda para cada propriedade
+        const helpContent = {
+            "Tipo de Compasso": {
+                title: "Tipo de Compasso",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>O tipo de compasso define a estrutura rítmica de uma música, indicando:<br>
+                    Quantos tempos existem por compasso.<br>
+                    Como esses tempos são divididos (binária ou ternariamente).</p>
+                    
+                    <h3>Como identificar?</h3>
+                    <p>Observando o número superior da Fórmula de Compasso, conforme abaixo:</p>
+                    
+                    <ul>
+                        <li>Os números <strong>2, 3 e 4</strong> para os Compassos <strong>Binário Simples, Ternário Simples e Quaternário Simples</strong>, repectivamente, com subdivisão binária</li>
+                        <li>Os números <strong>6, 9 e 12</strong> para os Compassos <strong>Binário Composto, Ternário Composto e Quaternário Composto</strong>, repectivamente, com subdivisão ternária</li>
+                    </ul>
+                `
+            },
+            "Tonalidade": {
+                title: "Tonalidade",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>A tonalidade define a escala principal em que a música está escrita. Ela determina quais notas são usadas e qual é a nota central (tônica).</p>
+                    
+                    <h3>Como identificar?</h3>
+                    <p>Observe a <strong>armadura de clave:</strong><p>
+                    <ul>
+                        <li>A escala sem nenhum acidente (Bemol ou Sustenido) junto à Clave é a Escala de <strong>DÓ MAIOR</strong>                             
+                        <li>Para as Escalas com Bemóis, a Tonalidade é a Quinta nota acima do ultimo Bemol</li>
+                        <li>Para as Escalas com Sustenidos, a Tonalidade é uma nota acima do ultimo Sustenido</li>
+                    </ul>
+                    
+                    <h3>Armaduras comuns:</h3>
+                    <ul>
+                        <li><strong>Dó Maior</strong>: sem acidentes</li>
+                        <li><strong>Sol Maior</strong>: 1 sustenido (Fá#)</li>
+                        <li><strong>Ré Maior</strong>: 2 sustenidos (Fá#, Dó#)</li>
+                        <li><strong>Fá Maior</strong>: 1 bemol (Sib)</li>
+                        <li><strong>Si bemol Maior</strong>: 2 bemóis (Sib, Mib)</li>
+                        <li><strong>Mi bemol Maior</strong>: 3 bemóis (Sib, Mib, Láb)</li>
+                    </ul>
+                `
+            },
+            "Ritmo Inicial": {
+                title: "Ritmo Inicial",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>O ritmo inicial classifica como a música começa em relação ao primeiro tempo forte do compasso.</p>
+                    
+                    <h3>Tipos:</h3>
+                    <ul>
+                        <li><strong>Tético</strong>: O Compasso Inicial é Completo</li>
+                        <li><strong>Anacrúsico</strong>: O Compasso Inicial é Incompleto e tem no máximo 50% de um Compasso Completo</li>
+                        <li><strong>Acéfalo</strong>: O Compasso Inicial é Incompleto e tem mais de 50% de um Compasso Completo</li>
+                    </ul>
+                    
+                `
+            },
+            "Unidade de Movimento": {
+                title: "Unidade de Movimento",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>é a figura musical que preenche um movimento (ou subdivisão) de um compasso composto</p>
+                    
+                    <h3>Como identificar?</h3>
+                    <ul>
+                        <li>Observe a Fórmula de Compasso, se o número superior for 2, 3 ou 4, <strong>Nao Existe Unidade de Movimento</strong></li>
+                        <li>Se o número superior for 6, 9 ou 12</li>
+
+                        <ul>
+                            <li>Se o número inferior for 4, Unidade de Movimento é a <strong>Semínima</strong></li>
+                            <li>Se o número inferior for 8, Unidade de Movimento é a <strong>Colcheia</strong></li>
+                        </ul>
+                `
+            },
+            "Unidade de Tempo": {
+                title: "Unidade de Tempo",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>Unidade de Tempo é a figura musical que corresponde a um tempo dentro de um compasso</p>
+                    
+                    <h3>Como identificar?</h3>
+                    <ul>
+                        <li>Se o número superior da Fórmula de Compasso for igual a 2, 3 ou 4</li>
+                        <ul>
+                            <li>Se o número inferior da Fórmula de Compasso for igual a <strong>2</strong>, A Unidade de Tempo é a <strong>Mínima</strong></li>
+                            <li>Se o número inferior da Fórmula de Compasso for igual a <strong>4</strong>, A Unidade de Tempo é a <strong>Semínima</strong></li>
+                        </ul>
+                        <li>Se o número superior da Fórmula de Compasso for igual a 6, 9 ou 12, vamos encontrar 2 informações diferentes:</li>
+                        <ul>
+                            <li>Se o número inferior da Fórmula de Compasso for igual a <strong>4</strong></li>
+                            <ul>
+                                <li>Primeiro encontramos a Unidade de Movimento que é a <strong>Semínima</strong></li>
+                                <li>Depois multiplicamos a Semínima por 3 e chegamos à Unidade de Tempo que é a <strong>Mínima Pontuada</strong></li>
+                            </ul>
+                            <li>Se o número inferior da Fórmula de Compasso for igual a <strong>8</strong></li>
+                            <ul>
+                                <li>Primeiro encontramos a Unidade de Movimento que é a <strong>Colcheia</strong></li>
+                                <li>Depois multiplicamos a Semínima por 3 e chegamos à Unidade de Tempo que é a <strong>Semínima Pontuada</strong></li>
+                            </ul>
+                        </ul>
+                    </ul>
+                    
+                `
+            },
+            "Unidade de Compasso": {
+                title: "Unidade de Compasso",
+                content: `
+                    <h3>O que é?</h3>
+                    <p>A Unidade de Compasso é a figura musical que preenche completamente um compasso, ou seja, a figura que possui a duração total de um compasso</p>
+                    
+                    <h3>Como identificar?</h3>
+                    <ul>
+                        <li>Primeiro, encontre a Unidade de Tempo do compasso</li>
+                        <li>Depois, encontre a Quantidade de Tempos no Compasso</li>
+
+                        <ul>
+                            <li>A Quantidade de Tempos é o número superior da Fórmula de Compasso quando igual a 2, 3 ou 4</li>
+                            <li>A Quantidade de Tempos é o número superior da Fórmula de Compasso, dividido por 3, quando igual a 6, 9 ou 12</li>
+                        </ul>
+
+                        <li>Agora multiplique a Unidade de Tempo pela Quantidade de Tempos</li>
+                    </ul>
+                `
+            }
+        };
+
+        // Função para mostrar o modal de ajuda
+        function showHelp(property) {
+            modalTitle.textContent = helpContent[property].title;
+            modalBody.innerHTML = helpContent[property].content;
+            modal.style.display = 'block';
+        }
+
+        // Fechar o modal quando clicar no X
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Fechar o modal quando clicar no OK
+        modalOk.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Fechar o modal quando clicar fora dele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Toggle do menu em mobile
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar fora (em mobile)
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 900 && 
+                !sidebar.contains(event.target) && 
+                event.target !== menuToggle &&
+                sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Função para formatar o texto do hino
+        function formatHinoText(hinoNumber) {
+            if (hinoNumber <= 480) {
+                return `Hino ${hinoNumber}`;
+            } else {
+                hinoNumber = hinoNumber.replace("C", "")
+                return `Coro ${hinoNumber}`;
+            }
+        }
+
+        // Função para embaralhar array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Função para gerar opções de resposta
+        function generateOptions(property, correctValue) {
+            // Valores possíveis para cada propriedade (únicos e baseados nos dados reais)
+            const possibleValues = {
+                "Tipo de Compasso": [ "Binário Simples", "Ternário Simples", "Quaternário Simples", "Binário Composto", "Ternário Composto", "Quaternário Composto"],
+                "Tonalidade": ["RÉ BEMOL MAIOR", "LÁ BEMOL MAIOR", "MI BEMOL MAIOR", "SI BEMOL MAIOR", "FÁ MAIOR", "DÓ MAIOR", "SOL MAIOR", "RÉ MAIOR", "LÁ MAIOR", "MI MAIOR"],
+                "Ritmo Inicial": ["TÉTICO", "ANACRÚSICO", "ACÉFALO"],
+                "Unidade de Movimento": ["Seminima", "Colcheia", "Minima"],
+                "Unidade de Tempo": ["Seminima", "Colcheia", "Minima"],
+                "Unidade de Compasso": ["Seminima", "Colcheia", "Minima"]
+            };
+
+            if (property=="Tonalidade") {
+                const selected = document.getElementById('hinario').value;
+                if (selected=="SI BEMOL") {
+                    possibleValues["Tonalidade"] = ["MI BEMOL MAIOR", "SI BEMOL MAIOR", "FÁ MAIOR", "DÓ MAIOR", "SOL MAIOR", "RÉ MAIOR", "LÁ MAIOR", "MI MAIOR", "SI MAIOR", "FÁ SUSTENIDO MAIOR"];
+                } else if (selected=="MI BEMOL") {
+                    possibleValues["Tonalidade"] = ["SI BEMOL MAIOR", "FÁ MAIOR", "DÓ MAIOR", "SOL MAIOR", "RÉ MAIOR", "LÁ MAIOR", "MI MAIOR", "SI MAIOR", "DÓ SUSTENIDO MAIOR"];
+                }
+            }
+
+            // Filtra valores possíveis, removendo o correto para evitar duplicatas
+            let availableOptions = possibleValues[property].filter(val => val !== correctValue);
+
+            // Embaralha as opções disponíveis
+            availableOptions = shuffleArray(availableOptions);
+            // Pega no máximo 2 opções erradas (para ter 3 no total: 1 correta + 2 erradas)
+            const wrongOptions = availableOptions.slice(0, 2);
+            
+            // Combina a resposta correta com as erradas e embaralha
+            const finalOptions = shuffleArray([correctValue, ...wrongOptions]);
+            return finalOptions;
+        }
+
+        // Função para criar uma pergunta sobre uma propriedade
+        function createPropertyQuestion(property, correctValue) {
+            const options = generateOptions(property, correctValue);
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'property-question';
+            questionDiv.dataset.property = property;
+            questionDiv.dataset.correctAnswer = correctValue;
+            
+            const propertyName = document.createElement('div');
+            propertyName.className = 'property-name';
+            
+            const propertyText = document.createElement('span');
+            propertyText.textContent = property + ':';
+            propertyName.appendChild(propertyText);
+            
+            // Adiciona ícone de ajuda
+            const helpIcon = document.createElement('span');
+            helpIcon.className = 'help-icon';
+            helpIcon.textContent = '?';
+            helpIcon.title = 'Ajuda';
+            helpIcon.addEventListener('click', () => showHelp(property));
+            propertyName.appendChild(helpIcon);
+            
+            questionDiv.appendChild(propertyName);
+            
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.dataset.value = option;
+                
+                button.addEventListener('click', function() {
+                    checkAnswer(this, property, correctValue);
+                });
+                
+                optionsDiv.appendChild(button);
+            });
+            
+            questionDiv.appendChild(optionsDiv);
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result';
+            questionDiv.appendChild(resultDiv);
+            
+            return questionDiv;
+        }
+
+        // Função para verificar a resposta
+        function checkAnswer(selectedButton, property, correctValue) {
+            const questionDiv = selectedButton.closest('.property-question');
+            const buttons = questionDiv.querySelectorAll('.option-btn');
+            const resultDiv = questionDiv.querySelector('.result');
+            
+            // Desabilitar todos os botões desta pergunta
+            buttons.forEach(button => {
+                button.disabled = true;
+                
+                // Marcar a resposta correta
+                if (button.dataset.value === correctValue) {
+                    button.classList.add('correct');
+                }
+            });
+            
+            // Verificar se a resposta está correta
+            if (selectedButton.dataset.value === correctValue) {
+                resultDiv.textContent = 'Correto!';
+                resultDiv.className = 'result correct';
+                correctAnswers++;
+            } else {
+                selectedButton.classList.add('incorrect');
+                resultDiv.textContent = `Incorreto! O correto é ${correctValue}.`;
+                resultDiv.className = 'result incorrect';
+                wrongAnswers++;
+            }
+            
+            resultDiv.style.display = 'block';
+            totalQuestions++;
+            updateStats();
+        }
+
+        // Função para atualizar estatísticas
+        function updateStats() {
+            statsElement.textContent = `Perguntas: ${totalQuestions} | Acertos: ${correctAnswers} | Erros: ${wrongAnswers}`;
+            const progress = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            progressElement.textContent = progress;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Função para encontrar um hino pelo número
+        function encontrarHinoPorNumero(numero) {
+            var cnumero = numero
+            if (numero > 480) {
+                cnumero = "C" + (numero - 480)
+            }
+            return hinosDB.find(hino => hino.Hino === cnumero.toString());
+        }
+
+        // Função para iniciar um novo hino
+        function startNewHino() {
+            if (modoEstudo === "sequencial") {
+                // Modo sequencial: usar o hino atual e depois incrementar
+                currentHino = encontrarHinoPorNumero(currentHinoIndex);
+                //alert(currentHino)
+                
+                // Incrementar para o próximo hino, voltando ao início se necessário
+                currentHinoIndex++;
+                if (currentHinoIndex > 486) { // Como temos apenas 8 hinos no exemplo
+                    currentHinoIndex = 1;
+                }
+            } else {
+                // Modo aleatório: selecionar um hino aleatório
+                const randomIndex = Math.floor(Math.random() * hinosDB.length);
+                currentHino = hinosDB[randomIndex];
+            }
+            
+            // Mostrar o número do hino
+            hinoNumberElement.textContent = formatHinoText(currentHino.Hino);
+
+            // Limpar perguntas anteriores
+            propertyQuestionsElement.innerHTML = '';
+            
+            // Criar perguntas para cada propriedade
+            propertiesToQuiz.forEach(property => {
+                correctValue = currentHino[property];
+                if (property=="Tonalidade") {
+                    const selected = document.getElementById('hinario').value;
+                    if (selected=="SI BEMOL" || selected=="MI BEMOL") {
+                        const Tonalidades  = ["RÉ BEMOL MAIOR", "LÁ BEMOL MAIOR", "MI BEMOL MAIOR", "SI BEMOL MAIOR", "FÁ MAIOR", "DÓ MAIOR", "SOL MAIOR", "RÉ MAIOR", "LÁ MAIOR", "MI MAIOR", "SI MAIOR", "FÁ SUSTENIDO MAIOR", "DÓ SUSTENIDO MAIOR"];
+                        const indice = Tonalidades.indexOf(correctValue);
+                        if (selected=="SI BEMOL") {
+                            correctValue = Tonalidades[indice+2]
+                        } else if (selected=="MI BEMOL") {
+                            correctValue = Tonalidades[indice+3]
+                        }
+                    }
+                }
+
+                if (currentHino[property]) {
+                    if (correctValue != "Nao existe") {
+                        const questionElement = createPropertyQuestion(property, correctValue);
+                        propertyQuestionsElement.appendChild(questionElement);
+                    }
+                }
+            });
+        }
+
+        // Event listener para o botão "Próximo Hino"
+        nextButton.addEventListener('click', startNewHino);
+
+        // Event listener para mudança de modo de estudo
+        modoSelect.addEventListener('change', function() {
+            modoEstudo = this.value;
+            
+            // Mostrar/ocultar campo de hino inicial baseado no modo selecionado
+            if (modoEstudo === "sequencial") {
+                hinoInicialGroup.style.display = 'block';
+            } else {
+                hinoInicialGroup.style.display = 'none';
+            }
+            
+            startNewHino();
+        });
+
+        // Event listener para o botão confirmar hino inicial
+        confirmarHinoBtn.addEventListener('click', function() {
+            const hinoInicial = parseInt(hinoInicialInput.value);
+            
+            // Validar o valor do hino inicial
+            if (hinoInicial >= 1 && hinoInicial <= 480) {
+                currentHinoIndex = hinoInicial;
+                startNewHino();
+            } else {
+                alert("Por favor, insira um número de hino válido entre 1 e 480.");
+                hinoInicialInput.value = 1;
+                currentHinoIndex = 1;
+            }
+        });
+
+        // Event listener para mudança de hinário
+        document.getElementById('hinario').addEventListener('change', startNewHino);
+
+        // Iniciar o quiz
+        startNewHino();
+        updateStats();
+    </script>
+</body>
+</html>
